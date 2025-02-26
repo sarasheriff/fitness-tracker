@@ -1,0 +1,20 @@
+export const Colors = {
+    primary100: '#eee4fe',
+    primary200: '#c9d9f8',
+    primary400: '#a9b5d9',
+    primary500: '#6c7ea0',
+    primary700: '#2a3762',
+    primary800: '#252444',
+    accent500: '#797c94',
+    blue100: '#e3edfd',
+    blue700: '#4489db',
+    pink100: "#fedcfe",
+    pink700: "#e855f2",
+    purpel100: '#f4e1fe',
+    purpel700: '#a482ea',
+    peach100:"#FFDCCC",
+    peach700:"#FFB4A2",
+    white: "#fff",
+    black: "#333",
+    red700: "#e9472e"
+  };
