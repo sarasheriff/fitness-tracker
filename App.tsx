@@ -24,29 +24,23 @@ export default function App() {
       <NavigationContainer>
         <BottomTabs.Navigator
         screenOptions={{
-          tabBarActiveTintColor: "#2c3a63", // Color of active tab icon/label
-          tabBarInactiveTintColor: 'gray', // Color of inactive tab icon/label
+          tabBarActiveTintColor: "#2c3a63",
+          tabBarInactiveTintColor: 'gray',
           headerBackground: () => (
             <LinearGradient
-            colors={['#4c669f', '#3b5998', '#192f6a']} // Your gradient colors
+            colors={['#4c669f', '#3b5998', '#192f6a']}
             style={{ flex: 1 }}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
-              // colors={["#2c3a63", "#252444", "#252444"]} // Your gradient colors
-              // style={{ flex: 1 }}
-              // start={{ x: 0, y: 0 }} // Start point of the gradient (e.g., top left)
-              // end={{ x: 1, y: 6 }} // End point of the gradient (e.g., bottom right)
-              // locations={[0, 0.3, 1]}
             />
           ),
           headerStyle: {
-            // backgroundColor: '#252444', // Background color of the header
             shadowColor: "transparent"
           },
-          headerShadowVisible: false, // Removes header border/shadow
-          headerTintColor: '#fff', // Text color of the header
+          headerShadowVisible: false,
+          headerTintColor: '#fff',
           headerTitleStyle: {
-            fontWeight: 'bold', // Font weight of the title
+            fontWeight: 'bold',
           },
         }}>
           <BottomTabs.Screen
