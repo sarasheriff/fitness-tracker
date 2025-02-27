@@ -5,25 +5,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/redux/store";
 import StatsItem from "../components/StatsItem";
 import { setCalories, setStepCount } from "../store/redux/stepCounterSlice";
+import useGetCalories from "../hooks/useGetCalories";
+import { Activities } from "../shared/types/activity.type";
 
 const AccelerometerComponent = () => {
   const [steps, setSteps] = useState(0);
   const dispatch: AppDispatch = useDispatch();
-  const [estimateCal, setEstimateCal] = useState(0);
+  const {estimateCal, stepsHandler, activityTypeHandler} = useGetCalories()
   const lastMagnitudeRef = useRef(0);
   const isRunning = useSelector((state: RootState) => state.activity.isRunnig);
-  const count = useSelector((state: RootState) => state.counter.value);
+  const selectedActivityType = useSelector((state: RootState) => state.activity.selectedActivityType);
   const isRecord = useSelector((state: RootState) => state.activity.recordingStatus);
   const stepThreshold = 1.2; 
   const cooldown = 300;
   const lastStepTimeRef = useRef(0);
-  const CALAROIED_PER_STEPS = 0.05;
   const isSelected = useSelector(
     (state: RootState) => state.activity.selectedActivity
   );
 
   useEffect(() => {
-    let subscription;
+    let subscription: any;
 
     if (isRunning) {
       subscription = Accelerometer.addListener(({ x, y, z }) => {
@@ -53,7 +54,8 @@ const AccelerometerComponent = () => {
     setSteps(0);
   };
   useEffect(() => {
-    setEstimateCal(steps * CALAROIED_PER_STEPS);
+    stepsHandler(steps)
+    activityTypeHandler(selectedActivityType as Activities)
   }, [steps]);
 
   useEffect(() => {

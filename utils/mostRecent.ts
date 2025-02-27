@@ -1,6 +1,6 @@
 import { Activities } from "../shared/interfacse";
 
-export const mostRecent = (data?: Activities[]) => {
+export const mostRecent = (data: Activities[]) => {
   const today = new Date();
   const recentData = data.filter((item) => {
     const itemDate = new Date(item.date);

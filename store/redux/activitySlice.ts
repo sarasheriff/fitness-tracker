@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Activities } from "../../shared/types/activity.type";
 
 const initialState = {
   selectedActivity: false,
   isRunnig: false,
-  recordingStatus: false
+  recordingStatus: false,
+  selectedActivityType: "",
 };
 
 const activitySlice = createSlice({
@@ -22,11 +24,21 @@ const activitySlice = createSlice({
     stopRunningStatus: (state) => {
       state.isRunnig = false;
     },
-    updateRecordingStatus: (state,  {payload}: PayloadAction<boolean>) => {
-      state.recordingStatus = payload
-    }
+    updateRecordingStatus: (state, { payload }: PayloadAction<boolean>) => {
+      state.recordingStatus = payload;
+    },
+    setActivityType: (state, { payload }: PayloadAction<Activities>) => {
+      state.selectedActivityType = payload;
+    },
   },
 });
 
-export const { selectActivity, startRunningStatus, removeSelectedActivity, stopRunningStatus, updateRecordingStatus } = activitySlice.actions;
+export const {
+  selectActivity,
+  startRunningStatus,
+  removeSelectedActivity,
+  stopRunningStatus,
+  updateRecordingStatus,
+  setActivityType
+} = activitySlice.actions;
 export default activitySlice.reducer;

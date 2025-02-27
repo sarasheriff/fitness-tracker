@@ -1,10 +1,11 @@
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
 import { Alert } from 'react-native';
+import moment from 'moment';
  export const shareFile = async (items: any[]) => {
     try {
     const header = 'Name,Duration,Date\n';
-    const csvRows = items.map((item) => `${item.name},${item.duration},${item.date}`);
+    const csvRows = items.map((item) => `${item.activityType},${item.timer},${moment(new Date(item.date).toISOString()).format().split("T")[0]}`);
     const csvString = header + csvRows.join('\n');
     const filename = FileSystem.documentDirectory + 'data.csv';
 
@@ -13,7 +14,6 @@ import { Alert } from 'react-native';
     });
     await Sharing.shareAsync(filename);
   } catch (error) {
-    console.error('Error sharing file:', error);
     Alert.alert('Error', 'Failed to share file.');
   }
 };

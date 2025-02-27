@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   },
   activityName: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontFamily: "poppins-sans-bold",
     color: Colors.black,
     marginBottom: 5
   },

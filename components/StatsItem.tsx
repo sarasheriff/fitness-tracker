@@ -8,7 +8,7 @@ const Steps = ({
 }: {
   style?: any;
   stateName: string;
-  value: string;
+  value: string | number;
 }) => {
   return (
     <View>
@@ -29,11 +29,13 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 25,
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
+    fontFamily: "poppins-sans"
   },
   text: {
-    color: Colors.accent500,
-    fontSize: 18,
+    color: Colors.pink100,
+    fontSize: 16,
     textAlign: "center",
+    fontFamily: "poppins-sans"
   },
 });

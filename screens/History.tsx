@@ -1,4 +1,4 @@
-import { Alert, View } from "react-native";
+import { View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import Card from "../components/UI/Card";
 import { useEffect, useState } from "react";
@@ -10,27 +10,44 @@ import { StyleSheet } from "react-native";
 import { Export } from "../components/Export";
 import { shareFile } from "../utils/exportCSV";
 import { Activities } from "../shared/interfacse";
+import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
+import moment from "moment";
 
-const History = () => {
+const initializeDB = async (db) => {
+  try {
+    await db.execAsync(`
+          PRAGMA journal_mode = WAL;
+          CREATE TABLE IF NOT EXISTS activitiesRecordsTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, date TEXT NOT NULL, timer TEXT NOT NULL, activityType TEXT NOT NULL, steps INTEGER NOT NULL, calories REAL NOT NULL);     
+          `);
+  } catch (error) {
+    throw new Error("Something went wrong!");
+  }
+};
+
+export default function History() {
+  return (
+    <SQLiteProvider databaseName="fitness-data.db" onInit={initializeDB}>
+      <ActivitiesHistory />
+    </SQLiteProvider>
+  );
+}
+
+const ActivitiesHistory = () => {
+  const db = useSQLiteContext();
   const [selected, setSelected] = useState("");
-  const [items, setItems] = useState<Activities[]>([
-    {
-      activityType: "Cycling",
-      calories: 20.5,
-      steps: 10,
-      timer: "10:00",
-      id: 1,
-      date: "2025-02-10",
-    },
-  ]);
-  const [filteredItems, setFilteredItems] = useState();
+  const [activities, setActivities] = useState<Activities[]>([]);
+  const [filteredItems, setFilteredItems] = useState<Activities[]>([]);
   const exportHandler = () => {
-    shareFile(items);
+    shareFile(selected ? filteredItems : activities);
   };
 
   useEffect(() => {
     if (!selected) return;
-    let selectedItem = items.filter((item) => item.date === selected);
+    let selectedItem = activities.filter((item) => {
+      let date = new Date(item.date).toISOString()
+      let dateFormatted = moment(date).format().split("T")[0]
+      return dateFormatted === selected
+    });
     setFilteredItems(selectedItem);
   }, [selected]);
 
@@ -38,15 +55,24 @@ const History = () => {
     setSelected("");
     setFilteredItems([]);
   };
+
+  async function fetchRecentActivities() {
+    const result = await db.getAllAsync("SELECT * FROM activitiesRecordsTable");
+    setActivities(result as Activities[]);
+  }
+  useEffect(() => {
+    fetchRecentActivities();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Card>
+      <Card childrenStyle={styles.card}>
         <Calendar
           style={{
             borderRadius: 20,
             overflow: "hidden",
           }}
-          onDayPress={(day) => {
+          onDayPress={(day: any) => {
             setSelected(day.dateString);
           }}
           markedDates={{
@@ -84,18 +110,20 @@ const History = () => {
         <Export onPress={exportHandler} />
       </View>
       <View style={styles.activity}>
-        <ActivityList items={selected ? filteredItems : items} />
+        <ActivityList items={selected ? filteredItems : activities} />
       </View>
     </View>
   );
 };
 
-export default History;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingBottom: 300,
+  },
+  card: {
+    paddingBottom: 0,
+    paddingTop: 20
   },
   buttonsContainer: {
     flexDirection: "row",
@@ -106,7 +134,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   activity: {
-    paddingBottom: 100,
+    paddingBottom: 60,
   },
   filterBtnBg: {
     backgroundColor: Colors.blue100,

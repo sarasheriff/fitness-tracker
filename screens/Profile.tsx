@@ -58,7 +58,7 @@ export function PickImagee() {
 
   const addImage = async (img) => {
     await db.runAsync("INSERT INTO userTable (imageUri) values (?)", [img]);
-    Alert.alert("Note Added");
+    Alert.alert("Image Added");
     setImage(img);
   };
 

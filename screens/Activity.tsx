@@ -6,7 +6,7 @@ import ActivityItem from "../components/Activities/ActivityItem";
 import { Colors } from "../constants/colors";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/redux/store";
-import { selectActivity } from "../store/redux/activitySlice";
+import { selectActivity, setActivityType } from "../store/redux/activitySlice";
 import AccelerometerComponent from "../components/Accelerometer";
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
@@ -48,13 +48,16 @@ const AddActivity = () => {
   const [activityName, setActivityName] = useState("");
 
   const onPressHandler = (activityName) => {
-    setActivityName(activityName);
-    isActivitySelected && isRunning
-      ? Alert.alert(
-          "Warning",
-          "Another activity is currently running. Please stop it first before starting a new one!"
-        )
-      : dispatch(selectActivity());
+    if (isRecord) {
+      Alert.alert(
+        "Warning",
+        "Another activity is currently running. Please stop it first before starting a new one!"
+      );
+    } else {
+      dispatch(selectActivity());
+      dispatch(setActivityType(activityName));
+      setActivityName(activityName);
+    }
   };
 
   const addActivityRecord = async () => {
@@ -69,6 +72,7 @@ const AddActivity = () => {
 
   useEffect(() => {
     if (!isRecord && count !== "00:00") {
+      console.log("here");
       addActivityRecord();
     }
   }, [isRecord]);
@@ -161,6 +165,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     color: Colors.black,
+    fontFamily: "poppins-sans",
   },
   titleWrapper: {
     paddingTop: 20,
