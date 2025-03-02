@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 import {
-  Button,
   Image,
   View,
   StyleSheet,
   Pressable,
-  TouchableOpacity,
   Text,
   Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
+
 import IconButton from "../components/UI/IconButton";
 import { Colors } from "../constants/colors";
-import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 
 const initializeDB = async (db) => {
   try {
@@ -20,7 +19,9 @@ const initializeDB = async (db) => {
         PRAGMA journal_mode = WAL;
         CREATE TABLE IF NOT EXISTS userTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, imageUri TEXT);     
         `);
-  } catch (error) {}
+  } catch (error) {
+    throw new Error("Something went wrong!");
+  }
 };
 
 export default function Profile() {
@@ -102,7 +103,7 @@ export function PickImagee() {
       </View>
       <View style={styles.emailUser}>
         <IconButton name="mail" size={20} color={Colors.purpel700} />
-        <Text style={styles.emailText}>user@email.com</Text>
+        <Text style={styles.emailText}>sara.elsadany@vodafone.com</Text>
       </View>
     </View>
   );

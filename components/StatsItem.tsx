@@ -1,17 +1,20 @@
 import { View, Text, StyleSheet } from "react-native";
+
 import { Colors } from "../constants/colors";
 
 const Steps = ({
   style,
   stateName,
   value,
+  styleWrapper
 }: {
   style?: any;
+  styleWrapper?: any;
   stateName: string;
   value: string | number;
 }) => {
   return (
-    <View>
+    <View style={styleWrapper}>
       <View>
         <Text style={[styles.value, style]}>{value}</Text>
       </View>

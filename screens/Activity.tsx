@@ -1,15 +1,23 @@
-import { View, Text, StyleSheet, Alert, Button } from "react-native";
+import { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  useWindowDimensions,
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
+
 import Card from "../components/UI/Card";
 import { Timer } from "../components/Timer";
-import StatsItem from "../components/StatsItem";
 import ActivityItem from "../components/Activities/ActivityItem";
-import { Colors } from "../constants/colors";
-import { useDispatch, useSelector } from "react-redux";
+import AccelerometerComponent from "../components/Accelerometer";
 import { AppDispatch, RootState } from "../store/redux/store";
 import { selectActivity, setActivityType } from "../store/redux/activitySlice";
-import AccelerometerComponent from "../components/Accelerometer";
-import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
-import { useEffect, useState } from "react";
+
+import { Colors } from "../constants/colors";
+import { Activities } from "../shared/types/activity.type";
 
 const initializeDB = async (db) => {
   try {
@@ -46,8 +54,10 @@ const AddActivity = () => {
   );
   const count = useSelector((state: RootState) => state.counter.value);
   const [activityName, setActivityName] = useState("");
+  const { width, height } = useWindowDimensions();
+  const orientation = width > height ? "landscape" : "portrait";
 
-  const onPressHandler = (activityName) => {
+  const onPressHandler = (activityName: Activities) => {
     if (isRecord) {
       Alert.alert(
         "Warning",
@@ -67,29 +77,43 @@ const AddActivity = () => {
         [new Date().toString(), count, activityName, steps, calories]
       );
       Alert.alert("activity Added");
-    } catch (error) {}
+    } catch (error) {
+      throw new Error("Something went wrong!");
+    }
   };
 
   useEffect(() => {
-    if (!isRecord && count !== "00:00") {
-      console.log("here");
-      addActivityRecord();
-    }
+    if (!isRecord && count !== "00:00") addActivityRecord();
   }, [isRecord]);
 
-  return (
-    <View>
+  let cradContent = (
+    <Card>
+      <Timer />
+      <View style={styles.wrapper}>
+        <AccelerometerComponent />
+      </View>
+    </Card>
+  );
+  if (orientation === "landscape") {
+    cradContent = (
       <Card>
-        <Timer />
-        <View style={styles.wrapper}>
-          <AccelerometerComponent />
+        <View style={styles.cardWrapper}>
+          <Timer />
+          <View style={styles.wrapper}>
+            <AccelerometerComponent />
+          </View>
         </View>
       </Card>
-      <View style={styles.titleWrapper}>
+    );
+  }
+  return (
+    <View>
+      {cradContent}
+      <View style={[styles.titleWrapper, orientation === "landscape" && styles.titleWrapperLandscape]}>
         <Text style={styles.title}>Select Activity</Text>
       </View>
-      <View style={styles.activityWrapper}>
-        <View style={styles.item}>
+      <View style={[styles.activityWrapper, {flexWrap: orientation === "landscape" ? "nowrap" : "wrap"}]}>
+        <View style={orientation === "landscape" ? styles.itemLandscape : styles.item}>
           <ActivityItem
             activity={{
               activityType: "Cycling",
@@ -101,7 +125,7 @@ const AddActivity = () => {
             onPress={onPressHandler}
           />
         </View>
-        <View style={styles.item}>
+        <View style={orientation === "landscape" ? styles.itemLandscape : styles.item}>
           <ActivityItem
             activity={{
               activityType: "Walking",
@@ -113,7 +137,7 @@ const AddActivity = () => {
             onPress={onPressHandler}
           />
         </View>
-        <View style={[styles.item, { marginTop: 20 }]}>
+        <View style={[orientation === "landscape" ? styles.itemLandscape : styles.item, { marginTop: orientation === "landscape" ? 0 : 20 }]}>
           <ActivityItem
             activity={{
               activityType: "Running",
@@ -125,7 +149,7 @@ const AddActivity = () => {
             onPress={onPressHandler}
           />
         </View>
-        <View style={[styles.item, { marginTop: 20 }]}>
+        <View style={[orientation === "landscape" ? styles.itemLandscape : styles.item, { marginTop: orientation === "landscape" ? 0 : 20 }]}>
           <ActivityItem
             activity={{
               activityType: "Swimming",
@@ -151,12 +175,15 @@ const styles = StyleSheet.create({
   activityWrapper: {
     flexDirection: "row",
     justifyContent: "space-between",
-    flexWrap: "wrap",
     marginLeft: 20,
     marginRight: 20,
   },
   item: {
     width: "50%",
+  },
+  itemLandscape: {
+    width: "20%",
+    flex: 1
   },
   infoText: {
     fontSize: 18,
@@ -171,5 +198,11 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 20,
     marginLeft: 20,
+  },
+  titleWrapperLandscape: {
+    paddingBottom: 10,
+  },
+  cardWrapper: {
+    height: 160,
   },
 });

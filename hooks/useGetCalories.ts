@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import { activitiesCalMapper } from "../utils/activitiesMapper";
 import { Activities } from "../shared/types/activity.type";
 

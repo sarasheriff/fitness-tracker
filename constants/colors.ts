@@ -7,7 +7,10 @@ export const Colors = {
     primary800: '#252444',
     accent500: '#797c94',
     blue100: '#e3edfd',
+    blue200: "#4c669f",
+    blue300: "#3b5998",
     blue700: '#4489db',
+    blue800: "#192f6a",
     pink100: "#fedcfe",
     pink700: "#e855f2",
     purpel100: '#f4e1fe',
@@ -16,5 +19,4 @@ export const Colors = {
     peach700:"#FFB4A2",
     white: "#fff",
     black: "#333",
-    red700: "#e9472e"
   };

@@ -1,22 +1,29 @@
 import { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet, useWindowDimensions } from "react-native";
 import { Accelerometer } from "expo-sensors";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store/redux/store";
+
 import StatsItem from "../components/StatsItem";
+import { AppDispatch, RootState } from "../store/redux/store";
 import { setCalories, setStepCount } from "../store/redux/stepCounterSlice";
 import useGetCalories from "../hooks/useGetCalories";
 import { Activities } from "../shared/types/activity.type";
 
 const AccelerometerComponent = () => {
   const [steps, setSteps] = useState(0);
+  const { width, height } = useWindowDimensions();
+  const orientation = width > height ? "landscape" : "portrait";
   const dispatch: AppDispatch = useDispatch();
-  const {estimateCal, stepsHandler, activityTypeHandler} = useGetCalories()
+  const { estimateCal, stepsHandler, activityTypeHandler } = useGetCalories();
   const lastMagnitudeRef = useRef(0);
   const isRunning = useSelector((state: RootState) => state.activity.isRunnig);
-  const selectedActivityType = useSelector((state: RootState) => state.activity.selectedActivityType);
-  const isRecord = useSelector((state: RootState) => state.activity.recordingStatus);
-  const stepThreshold = 1.2; 
+  const selectedActivityType = useSelector(
+    (state: RootState) => state.activity.selectedActivityType
+  );
+  const isRecord = useSelector(
+    (state: RootState) => state.activity.recordingStatus
+  );
+  const stepThreshold = 1.2;
   const cooldown = 300;
   const lastStepTimeRef = useRef(0);
   const isSelected = useSelector(
@@ -54,30 +61,28 @@ const AccelerometerComponent = () => {
     setSteps(0);
   };
   useEffect(() => {
-    stepsHandler(steps)
-    activityTypeHandler(selectedActivityType as Activities)
+    stepsHandler(steps);
+    activityTypeHandler(selectedActivityType as Activities);
   }, [steps]);
 
   useEffect(() => {
-    dispatch(setStepCount(steps))
-    dispatch(setCalories(estimateCal))
-    if(!isRecord) resetSteps()
+    dispatch(setStepCount(steps));
+    dispatch(setCalories(estimateCal));
+    if (!isRecord) resetSteps();
   }, [isRecord, steps, estimateCal]);
 
-
-
   return (
-    <View style={styles.container}>
-      <View style={styles.buttonContainer}>
+    <View style={[styles.container,  orientation === "landscape" && styles.landscapeContainer]}>
+      <View style={[styles.buttonContainer, orientation === "landscape" && styles.landscapeBtnContainer]}>
         <StatsItem
           stateName="Steps"
           value={steps.toString()}
           style={styles.infoText}
         />
-     
+
         <StatsItem
           stateName="Calories"
-          value={!estimateCal?  `0` :estimateCal.toFixed(2).toString()}
+          value={!estimateCal ? `0` : estimateCal.toFixed(2).toString()}
           style={styles.infoText}
         />
       </View>
@@ -89,7 +94,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
+  },
+  landscapeContainer: {
+    alignItems: "flex-start",
   },
   infoText: {
     fontSize: 18,
@@ -99,6 +107,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     width: "60%",
+  },
+  landscapeBtnContainer: {
+    paddingRight: 90,
   },
 });
 

@@ -16,6 +16,7 @@ import Profile from "./screens/Profile";
 import History from "./screens/History";
 import store from "./store/redux/store";
 import { useLocaleNotifications } from "./hooks/useLocaleNotification";
+import { Colors } from "./constants/colors";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -43,16 +44,17 @@ export default function App() {
 
   return (
     <>
-      <StatusBar />
+      <StatusBar style="light" />
       <Provider store={store}>
         <NavigationContainer>
           <BottomTabs.Navigator
             screenOptions={{
               tabBarActiveTintColor: "#2c3a63",
+              headerTitleAlign: "left",
               tabBarInactiveTintColor: "gray",
               headerBackground: () => (
                 <LinearGradient
-                  colors={["#4c669f", "#3b5998", "#192f6a"]}
+                  colors={[Colors.blue200, Colors.blue300, Colors.blue800]}
                   style={{ flex: 1 }}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
@@ -118,6 +120,10 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  rootScreen: {
+    flex: 1,
+    backgroundColor: "transparent",
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",

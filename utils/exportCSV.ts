@@ -1,7 +1,9 @@
+import { Alert } from 'react-native';
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
-import { Alert } from 'react-native';
+
 import moment from 'moment';
+
  export const shareFile = async (items: any[]) => {
     try {
     const header = 'Name,Duration,Date\n';

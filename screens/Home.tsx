@@ -1,16 +1,17 @@
-import { View, Text, StyleSheet } from "react-native";
-import Card from "../components/UI/Card";
-import StateItem from "../components/StatsItem";
-import ActivityList from "../components/Activities/ActivityList";
+import { View, Text, StyleSheet, useWindowDimensions } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import * as Progress from "react-native-progress";
 import { useCallback, useEffect, useState } from "react";
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
-import { Colors } from "../constants/colors";
+
+import Card from "../components/UI/Card";
+import StateItem from "../components/StatsItem";
+import ActivityList from "../components/Activities/ActivityList";
 import { mostRecent } from "../utils/mostRecent";
-import { Activities } from "../shared/interfacse";
 import { sumCalculation, sumDuration } from "../utils/sumCalculation";
-import { useFocusEffect } from "@react-navigation/native";
+import { Activities } from "../shared/interfacse";
 import useTimeFormat from "../hooks/useTimeFormat";
+import { Colors } from "../constants/colors";
 
 const initializeDB = async (db) => {
   try {
@@ -37,8 +38,10 @@ const DashboardInfo = () => {
   const [totalRecentElapsedTime, setTotalRecentElapsedTime] = useState("");
   const [recentActivities, setRecentActivities] = useState<Activities[]>([]);
   const [activities, setActivities] = useState<Activities[]>([]);
-  const {timeFormatting, timeHandler} = useTimeFormat("")
-  
+  const { timeFormatting, timeHandler } = useTimeFormat("");
+  const { width, height } = useWindowDimensions();
+  const orientation = width > height ? "landscape" : "portrait";
+
   const db = useSQLiteContext();
   const MAX_STEPS_VALUE = 10000;
 
@@ -67,10 +70,9 @@ const DashboardInfo = () => {
     setActivities(result as Activities[]);
   }
 
-
   useEffect(() => {
     if (activities.length) {
-      setRecentActivities(mostRecent(activities.reverse()))
+      setRecentActivities(mostRecent(activities.reverse()));
     }
   }, [activities]);
 
@@ -89,18 +91,55 @@ const DashboardInfo = () => {
       setTotalRecentCals(totalCalories);
     }
   }, [recentActivities]);
-  
+
   useEffect(() => {
     setTotalRecentElapsedTime(timeFormatting);
-  }, [timeFormatting])
+  }, [timeFormatting]);
 
-  return (
-    <View style={style.wrapper}>
+  let cradContent = (
+    <Card>
+      <View>
+        <View style={style.steps}>
+          <Progress.Circle
+            size={150}
+            color={Colors.primary400}
+            borderWidth={0}
+            indeterminate={false}
+            animated
+            thickness={10}
+            unfilledColor={Colors.white}
+            showsText
+            progress={progress}
+            formatText={(progressValue) => {
+              return `${Math.round(progressValue * 100)}%`;
+            }}
+            strokeCap="round"
+          />
+          <StateItem stateName="Steps" value={currentSteps} />
+        </View>
+        <View style={style.info}>
+          <StateItem
+            stateName="Calories"
+            value={totalRecentCals.toFixed(2)}
+            style={style.infoText}
+          />
+          <StateItem
+            stateName="Active time"
+            value={totalRecentElapsedTime.toString()}
+            style={style.infoText}
+          />
+        </View>
+      </View>
+    </Card>
+  );
+
+  if (orientation === "landscape") {
+    cradContent = (
       <Card>
-        <View>
+        <View style={style.cardWrapper}>
           <View style={style.steps}>
             <Progress.Circle
-              size={150}
+              size={orientation === "landscape" ? 110 : 150}
               color={Colors.primary400}
               borderWidth={0}
               indeterminate={false}
@@ -114,22 +153,30 @@ const DashboardInfo = () => {
               }}
               strokeCap="round"
             />
-            <StateItem stateName="Steps" value={currentSteps} />
+              <StateItem stateName="Steps" value={currentSteps}/>
           </View>
-          <View style={style.info}>
-            <StateItem
-              stateName="Calories"
-              value={totalRecentCals}
-              style={style.infoText}
-            />
-            <StateItem
-              stateName="Active time"
-              value={totalRecentElapsedTime.toString()}
-              style={style.infoText}
-            />
-          </View>
+          <View style={style.infoWrapper}>
+              <StateItem
+                stateName="Calories"
+                value={totalRecentCals.toFixed(2)}
+                style={style.infoText}
+                styleWrapper={style.stateItem}
+              />
+              <StateItem
+                stateName="Active time"
+                value={totalRecentElapsedTime.toString()}
+                style={style.infoText}
+                styleWrapper={style.stateItem}
+              />
+            </View>
         </View>
       </Card>
+    );
+  }
+
+  return (
+    <View style={style.wrapper}>
+      {cradContent}
       <View style={style.titleWrapper}>
         <Text style={style.title}>Recent Activities</Text>
       </View>
@@ -166,4 +213,19 @@ const style = StyleSheet.create({
     marginLeft: 20,
     marginTop: 20,
   },
+  cardWrapper: {
+    height: 160,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  infoWrapper: {
+    justifyContent: "space-between",
+    alignItems: "center",
+
+  },
+  stateItem: {
+    padding: 10,
+    paddingLeft: 30,
+  }
 });

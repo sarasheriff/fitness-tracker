@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { Alert, Button, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/redux/store";
 import IconButton from "./UI/IconButton";
@@ -14,10 +21,11 @@ import { setValue } from "../store/redux/counterSlice";
 
 export const Timer = () => {
   const [isActive, setIsActive] = useState(false);
-  const [timer, setTimer] = useState(0);
-  const count = useSelector((state: RootState) => state.counter.value);
-   const isRunning = useSelector((state: RootState) => state.activity.isRunnig);
-   const isRecord = useSelector((state: RootState) => state.activity.recordingStatus);
+  const { width, height } = useWindowDimensions();
+  const orientation = width > height ? "landscape" : "portrait";
+  const isRecord = useSelector(
+    (state: RootState) => state.activity.recordingStatus
+  );
   const isSelected = useSelector(
     (state: RootState) => state.activity.selectedActivity
   );
@@ -40,7 +48,7 @@ export const Timer = () => {
   const startTimer = () => {
     setIsActive(true);
     dispatch(startRunningStatus());
-    dispatch(updateRecordingStatus(true))
+    dispatch(updateRecordingStatus(true));
   };
 
   const pauseTimer = () => {
@@ -49,12 +57,12 @@ export const Timer = () => {
   };
 
   const stopTimer = () => {
-    dispatch(setValue(formatTime(seconds)))
+    dispatch(setValue(formatTime(seconds)));
     setSeconds(0);
     setIsActive(false);
     dispatch(removeSelectedActivity());
     dispatch(stopRunningStatus());
-    dispatch(updateRecordingStatus(false))
+    dispatch(updateRecordingStatus(false));
   };
 
   const formatTime = (time) => {
@@ -72,7 +80,14 @@ export const Timer = () => {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <View
+      style={[
+        styles.wrapper,
+        orientation === "landscape"
+          ? styles.wrapperLandscape
+          : styles.wrapperPortrait,
+      ]}
+    >
       <View>
         <Text style={styles.timer}>{formatTime(seconds)}</Text>
       </View>
@@ -111,6 +126,12 @@ export const Timer = () => {
 const styles = StyleSheet.create({
   wrapper: {
     alignItems: "center",
+  },
+  wrapperLandscape: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  wrapperPortrait: {
     padding: 20,
   },
   iconsWrapper: {
