@@ -58,29 +58,29 @@ These instructions will get you a copy of the project up and running on your loc
 ## Project Structure
 
 Fitness-tracker/
-├── assets/         # Images, fonts, and other assets.
-├── components/     # Reusable React components
-├── screens/        # App screens/pages
-├── navigation/     # Navigation setup (e.g., React Navigation / using Bottom Tabs Navigator)
-├── utils/          # Utility functions and helpers
-├── hooks/          # Reusable hooks
-├── constants/      # organize values that are used throughout codebase and don't change during the program's execution
-├── shared/         # Adding reusable types & interfaces
-├── store/          # Redux store
-├── app.json        # Expo app configuration
-├── package.json    # Project dependencies and scripts
-└── app.tsx         # Main app entry point
+* ├── assets/         # Images, fonts, and other assets
+* ├── components/     # Reusable React components
+* ├── screens/        # App screens/pages
+* ├── navigation/     # Navigation setup (e.g., React Navigation / using Bottom Tabs Navigator)
+* ├── utils/          # Utility functions and helpers
+* ├── hooks/          # Reusable hooks
+* ├── constants/      # organize values that are used throughout codebase and don't change during the program's execution
+* ├── shared/         # Adding reusable types & interfaces
+* ├── store/          # Redux store
+* ├── app.json        # Expo app configuration
+* ├── package.json    # Project dependencies and scripts
+* └── app.tsx         # Main app entry point
 
 ## Dependencies
 
-`react-navigation`: For app navigation.
-`expo-notifications`: For push notifications.
-`reduxjs/toolkit`: For Redux store.
-`expo-font`: For custom fonts.
-`expo-splash-screen`: For Splash screen.
-`react-native-csv, expo-sharing`: For export as CSV.
-`react-native-progress`: For progress bar.
-`react-native-calendars`: For Calenders.
-`expo-sqlite`: For store data locally on device.
-`expo-sensors`: For access hardware device's accelerometer, gyroscope, magnetometer, and pedometer.
-`expo-image-picker`: For pickup image from device.
+* `react-navigation`: For app navigation.
+* `expo-notifications`: For push notifications.
+* `reduxjs/toolkit`: For Redux store.
+* `expo-font`: For custom fonts.
+* `expo-splash-screen`: For Splash screen.
+* `react-native-csv, expo-sharing`: For export as CSV.
+* `react-native-progress`: For progress bar.
+* `react-native-calendars`: For Calenders.
+* `expo-sqlite`: For store data locally on device.
+* `expo-sensors`: For access hardware device's accelerometer, gyroscope, magnetometer, and pedometer.
+* `expo-image-picker`: For pickup image from device.
