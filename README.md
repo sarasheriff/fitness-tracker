@@ -1,5 +1,7 @@
 # Fitness-tracker
 
+[App Logo](./assets/icon.png)
+
 This is a React Native project built with Expo.
 
 ## Description
@@ -55,8 +57,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Project Structure
 
-MyReactNativeExpoApp/
-├── assets/         # Images, fonts, and other assets
+Fitness-tracker/
+├── assets/         # Images, fonts, and other assets.
 ├── components/     # Reusable React components
 ├── screens/        # App screens/pages
 ├── navigation/     # Navigation setup (e.g., React Navigation / using Bottom Tabs Navigator)
