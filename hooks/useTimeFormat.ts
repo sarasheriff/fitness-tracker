@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 function useTimeFormat() {
-  const [timeFormatting, setTimeFormatting] = useState("");
+  const [timeFormatting, setTimeFormatting] = useState("0");
   const [recievedTime, setRecievedTime] = useState("");
   let splitTime = recievedTime.split(":");
   let hours = splitTime[0];

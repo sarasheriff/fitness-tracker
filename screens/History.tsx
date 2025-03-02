@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ScrollView, useWindowDimensions, View } from "react-native";
 import { StyleSheet } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 
@@ -64,9 +65,11 @@ const ActivitiesHistory = () => {
     const result = await db.getAllAsync("SELECT * FROM activitiesRecordsTable");
     setActivities(result as Activities[]);
   }
-  useEffect(() => {
-    fetchRecentActivities();
-  }, []);
+    useFocusEffect(
+      useCallback(() => {
+        fetchRecentActivities();
+      }, [])
+    );
 
   return (
     <View
@@ -140,7 +143,7 @@ const styles = StyleSheet.create({
     paddingBottom: 210,
   },
   containerPortrait: {
-    paddingBottom: 300,
+    paddingBottom: 310,
   },
   card: {
     paddingBottom: 0,

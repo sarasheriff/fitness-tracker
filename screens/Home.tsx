@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, useWindowDimensions } from "react-native";
+import { View, Text, StyleSheet, useWindowDimensions, NativeModules, Alert } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Progress from "react-native-progress";
 import { useCallback, useEffect, useState } from "react";
@@ -38,7 +38,7 @@ const DashboardInfo = () => {
   const [totalRecentElapsedTime, setTotalRecentElapsedTime] = useState("");
   const [recentActivities, setRecentActivities] = useState<Activities[]>([]);
   const [activities, setActivities] = useState<Activities[]>([]);
-  const { timeFormatting, timeHandler } = useTimeFormat("");
+  const { timeFormatting, timeHandler } = useTimeFormat();
   const { width, height } = useWindowDimensions();
   const orientation = width > height ? "landscape" : "portrait";
 
@@ -46,6 +46,7 @@ const DashboardInfo = () => {
   const MAX_STEPS_VALUE = 10000;
 
   useEffect(() => {
+    if(!currentSteps) return;
     let intervalId: any;
 
     const animateProgress = () => {
