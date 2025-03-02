@@ -1,8 +1,9 @@
 # Fitness-tracker
 
-[App Logo](./assets/icon.png)
-
 This is a React Native project built with Expo.
+
+![icon](https://github.com/user-attachments/assets/cefd7cff-91bc-43c8-8394-9360c193d5fd)
+
 
 ## Description
 
